@@ -25,7 +25,7 @@ int main() {
         
         servaddr.sin_family = AF_INET;
         servaddr.sin_port = htons(PORT);
-        servaddr.sin_addr.s_addr = htons(INADDR_ANY);
+        servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
         
         if(bind(sockfd,(struct sockaddr*)&servaddr,sizeof(servaddr)) < 0) {
                 printf("Error in BIND function");
