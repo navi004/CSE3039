@@ -27,8 +27,8 @@ int main(int argc, char**argy)
 
 	while(1)
 	{
-	  time_t tm;
-   time(&tm);
+	  	time_t tm;
+   		time(&tm);
  
 		bzero(sendline, 100);
 		bzero(recvline, 100);
