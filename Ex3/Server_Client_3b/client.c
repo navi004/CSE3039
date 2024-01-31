@@ -7,7 +7,6 @@
 #include <sys/types.h>
 #include <netdb.h>
 
-int inet_pton();
 int main(int argc, char**argy)
 {
 	int sockfd,n;
