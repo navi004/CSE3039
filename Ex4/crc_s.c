@@ -81,7 +81,6 @@ int main() {
     sscanf(buffer,"%s\n%s",data,divisor);  //deformatting the string buffer and storing it into data,division
     CRC(data,divisor,check_value);
     printf("CRC = %s\n",check_value);
-    fgets(check_value,sizeof(check_value),stdin);
     write(connfd,check_value,100);
 
     close(sockfd);
