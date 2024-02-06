@@ -5,29 +5,35 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <string.h>
 
 #define PORT 4771
 
 void CRC(char data[], char divisor[], char check_value[]){
 int N = strlen(divisor);
 int l = strlen(data);
-
+int i=0;
     for(int i=0;i<N-1;i++){
-        data[l+1] = '0';
+        data[l+i] = '0';
     }
-
+    //Append zeroes to the data
     for(int i=0;i<N;i++){
         check_value[i] = data[i];
     }
+    
     do{
         if(check_value[0] == '1'){
             for(int j=0;j<N;j++){
+            //XOR division
                 check_value[j] = ((check_value[j] == divisor[j])?'0':'1');
             }
         }
-        for(int j=0;j<N-1;j++){
+        int j;
+        //Move the bits by 1 position for the next computation
+        for(j=0;j<N-1;j++){
             check_value[j] = check_value[j+1];
         }
+        //Appending a bit from data
         check_value[j] = data[i++];
     }while(i<=l+N-1);
 }
@@ -50,7 +56,7 @@ int main() {
     printf("Server Socket Created Successfully \n");
     bzero((struct sockaddr*) &servaddr, sizeof(servaddr));
 
-    servaddr.sin.family = AF_INET;
+    servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
@@ -71,10 +77,12 @@ int main() {
         exit(0);
     }
 
-    read(sockfd,buffer,1024);
-    sscanf(buffer,"%s\n%s",data,divisor);
+    read(connfd,buffer,1024);
+    sscanf(buffer,"%s\n%s",data,divisor);  //deformatting the string buffer and storing it into data,division
     CRC(data,divisor,check_value);
     printf("CRC = %s\n",check_value);
+    fgets(check_value,sizeof(check_value),stdin);
+    write(connfd,check_value,100);
 
     close(sockfd);
     close(connfd);
