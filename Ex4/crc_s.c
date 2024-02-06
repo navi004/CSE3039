@@ -10,9 +10,9 @@
 #define PORT 4771
 
 void CRC(char data[], char divisor[], char check_value[]){
-int N = strlen(divisor);
-int l = strlen(data);
-int i=0;
+    int N = strlen(divisor);
+    int l = strlen(data);
+    int i=0;
     for(int i=0;i<N-1;i++){
         data[l+i] = '0';
     }
