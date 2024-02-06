@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
-#include <argparse/inet.h>
+#include <arpa/inet.h>
 
 #define PORT 4771
 
@@ -14,6 +14,8 @@ int main(){
     struct sockaddr_in serv;
     char data[100];
     char divisor[100];
+    char crc[100];
+    char codeWord[1024];
 
     sockfd = socket(AF_INET,SOCK_STREAM,0);
 
@@ -31,15 +33,28 @@ int main(){
 
     printf("Enter the data:");
     scanf("%s",data);
+    int l = strlen(data);
     printf("Enter the divisor:");
     scanf("%s",divisor);
-
+    int N = strlen(divisor);
+    
     char msg[200];
-    sprintf(msg,"%s\n%s",data,divisor);
+    sprintf(msg,"%s\n%s",data,divisor);   //Formatting the string and storing in msg
 
     send(sockfd,msg,strlen(msg),0);
     printf("Data and Divisor sent to the server\n");
-
+    printf("From Server:\n");
+    read(sockfd,crc,sizeof(crc));
+    
+    //Construction of Code Word
+    for(int i=0;i<l;i++){
+          codeWord[i] = data[i];
+    }
+    for(int i=0;i<N-1;i++){
+          codeWord[l+i] = crc[i];
+    }
+    codeWord[l+N-1] = '\0';   //Null - terminate the string
+    printf("CodeWord = %s\n",codeWord);
     close(sockfd);
 
     return 0;
